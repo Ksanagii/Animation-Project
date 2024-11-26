@@ -3,6 +3,7 @@ using UnityEngine;
 public class AnimationPlayer : MonoBehaviour
 {
     [SerializeField] private Animator animPlayer;
+    [SerializeField] private Animator animChest;
     [SerializeField] private MovementPlayer move;
     private bool estaNoChao = true;
 
@@ -61,7 +62,7 @@ public class AnimationPlayer : MonoBehaviour
         }
 
         //Pegando
-        if (Input.GetKey(KeyCode.G))
+        if (Input.GetKey(KeyCode.F))
         {
             animPlayer.SetTrigger("Pegar");
         }
@@ -110,6 +111,14 @@ public class AnimationPlayer : MonoBehaviour
         {
             animPlayer.SetBool("NoChao", false);
             estaNoChao = false;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Chest"))
+        {
+            animChest.SetBool("Open", true);
         }
     }
 }

@@ -36,4 +36,6 @@ public class MovementPlayer : MonoBehaviour
         rb.MoveRotation(rotacao * rb.rotation);
     }
 
+    
+
 }
