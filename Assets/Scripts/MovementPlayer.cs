@@ -12,10 +12,11 @@ public class MovementPlayer : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
     }
-
+    
     //Andar
     public void Andar()
     {
+        
         float moveV = Input.GetAxis("Vertical");
         // transform.position += new Vector3(0, 0, moveV * velocidade * Time.deltaTime);
         Vector3 direcao = moveV * transform.forward;
@@ -35,7 +36,5 @@ public class MovementPlayer : MonoBehaviour
         Quaternion rotacao = Quaternion.Euler(anguloRotacao * moveH * Time.deltaTime);
         rb.MoveRotation(rotacao * rb.rotation);
     }
-
-    
 
 }
