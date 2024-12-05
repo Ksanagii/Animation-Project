@@ -3,16 +3,18 @@ using UnityEngine;
 public class AnimationPlayer : MonoBehaviour
 {
     [SerializeField] private Animator animPlayer;
-    [SerializeField] private Animator animChest;
     [SerializeField] private MovementPlayer move;
     private bool estaNoChao = true;
+    public int keys = 0;
+    public bool life;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         animPlayer = GetComponent<Animator>();
         move = GetComponent<MovementPlayer>();
-    }
+        life = true;
+}
 
     // Update is called once per frame
     void FixedUpdate()
@@ -55,11 +57,6 @@ public class AnimationPlayer : MonoBehaviour
             animPlayer.SetTrigger("Torcida");
         }
 
-        //Interagindo
-        if (Input.GetKey(KeyCode.E))
-        {
-            animPlayer.SetTrigger("Interact");
-        }
 
         //Pegando
         if (Input.GetKey(KeyCode.F))
@@ -91,6 +88,11 @@ public class AnimationPlayer : MonoBehaviour
         }
     }
 
+    void Interagir()
+    {
+        animPlayer.SetTrigger("Interact");
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if(collision.gameObject.CompareTag("Chao"))
@@ -98,12 +100,6 @@ public class AnimationPlayer : MonoBehaviour
             animPlayer.SetBool("NoChao", true);
             estaNoChao = true;
         }
-        /*
-        else
-        {
-            animPlayer.SetBool("NoChao", false);
-        }
-        */
     }
     private void OnCollisionExit(Collision collision)
     {
@@ -116,9 +112,56 @@ public class AnimationPlayer : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Chest"))
+        if (other.gameObject.CompareTag("Espinhos"))
         {
-            animChest.SetBool("Open", true);
+            if (life == true)
+            {
+                life = false;
+                animPlayer.SetTrigger("Morte");
+            }
+
         }
     }
+    private void OnTriggerStay(Collider col)
+    {
+        if (col.gameObject.CompareTag("Chest"))
+        {
+            Animator animChest = col.gameObject.GetComponent<Animator>();
+            if(Input.GetKey(KeyCode.E))
+            {
+                Interagir();
+                if (!animChest.GetBool("Chest"))
+                {
+                    keys++;
+                }
+                animChest.SetBool("Chest", true);
+                Debug.Log(keys);
+
+            }
+            
+        }
+        if (col.gameObject.CompareTag("Door"))
+        {
+            Animator animDoor = col.gameObject.GetComponent<Animator>();
+            if (Input.GetKey(KeyCode.E))
+            {
+                Interagir();
+                if (!animDoor.GetBool("OpenNoor") && keys > 0)
+                {
+                    animDoor.SetBool("OpenNoor", true);
+                    Invoke("ProximaFase", 3f);
+                    keys--;
+                }
+
+                Debug.Log(keys);
+
+            }
+
+        }
+    }
+    public void ProximaFase()
+    {
+        Debug.Log("Muda de Fase"); // Aqui vc linka com algum codigo de mudar de fase
+    }
+    
 }
